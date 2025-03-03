@@ -3,7 +3,7 @@ package ca.cal.tp1.persistence;
 import ca.cal.tp1.modele.Emprunteur;
 import java.sql.*;
 
-public class EmprunteurDAO extends RepositoryParentJDBC {
+public class EmprunteurDAO extends RepositoryParentJDBC implements IEmprunteurDAO {
 
     public void save(Emprunteur emprunteur) {
         String sql = """
@@ -27,7 +27,7 @@ public class EmprunteurDAO extends RepositoryParentJDBC {
         }
     }
 
-    public Emprunteur getById(int id) {
+    public Emprunteur get(int id) {
         Emprunteur emprunteur = null;
         try (PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM Emprunteur WHERE userID = ?")) {
             preparedStatement.setInt(1, id);

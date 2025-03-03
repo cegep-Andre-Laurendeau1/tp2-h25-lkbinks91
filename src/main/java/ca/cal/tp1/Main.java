@@ -2,6 +2,7 @@ package ca.cal.tp1;
 
 import ca.cal.tp1.modele.Emprunteur;
 import ca.cal.tp1.persistence.EmprunteurDAO;
+import ca.cal.tp1.persistence.IEmprunteurDAO;
 import ca.cal.tp1.service.EmprunteurService;
 import ca.cal.tp1.utils.TcpServer;
 
@@ -11,7 +12,7 @@ public class Main {
     public static void main(String[] args) throws SQLException, InterruptedException {
         // Votre script qui utilise votre API ici
         TcpServer.startTcpServer();
-        EmprunteurDAO emprunteurDAO = new EmprunteurDAO();
+        IEmprunteurDAO emprunteurDAO = new EmprunteurDAO();
         EmprunteurService emprunteurService = new EmprunteurService(emprunteurDAO);
 
 
