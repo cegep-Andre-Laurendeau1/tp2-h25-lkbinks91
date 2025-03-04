@@ -16,7 +16,7 @@ public class Main {
         EmprunteurService emprunteurService = new EmprunteurService(emprunteurDAO);
 
 
-        Emprunteur emprunteur = new Emprunteur(1, "LeonardoVinci", "LeonDivin@Tp1.com", "439-001-1122");
+        Emprunteur emprunteur = new Emprunteur(0, "LeonardoVinci", "LeonDivin@Tp1.com", "439-001-1122");
         emprunteurService.ajouteEmprunteur(emprunteur);
         System.out.println(" Emprunteur ajouté avec ID : " + emprunteur.getUserID());
 
