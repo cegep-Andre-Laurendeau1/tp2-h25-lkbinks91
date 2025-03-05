@@ -1,9 +1,13 @@
 package ca.cal.tp1;
 
+import ca.cal.tp1.modele.CD;
 import ca.cal.tp1.modele.Emprunteur;
+import ca.cal.tp1.persistence.DocumentDAO;
 import ca.cal.tp1.persistence.EmprunteurDAO;
+import ca.cal.tp1.persistence.IDocumentDAO;
 import ca.cal.tp1.persistence.IEmprunteurDAO;
 import ca.cal.tp1.service.EmprunteurService;
+import ca.cal.tp1.service.PreposeService;
 import ca.cal.tp1.utils.TcpServer;
 
 import java.sql.SQLException;
@@ -27,6 +31,19 @@ public class Main {
         } else {
             System.out.println(" Emprunteur non trouvé.");
         }
+
+        IDocumentDAO documentDAO = new DocumentDAO();
+        PreposeService preposeService = new PreposeService(documentDAO);
+
+        CD cd = new CD();
+        cd.setTitre("Sticky fingers");
+        cd.setArtiste("Rolling stones");
+        cd.setDuree(60);
+        cd.setGenre("Rock");
+        cd.setNombreExemplaires(5);
+
+        preposeService.ajouterDocument(cd);
+
 
         Thread.currentThread().join();
     }
