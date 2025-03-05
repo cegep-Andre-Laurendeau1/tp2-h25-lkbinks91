@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class Emprunt {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int borrowID;
     private Date dateEmprunt;
     private String status;
