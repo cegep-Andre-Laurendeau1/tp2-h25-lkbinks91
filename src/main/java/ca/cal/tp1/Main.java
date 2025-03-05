@@ -1,6 +1,7 @@
 package ca.cal.tp1;
 
 import ca.cal.tp1.modele.CD;
+import ca.cal.tp1.modele.DVD;
 import ca.cal.tp1.modele.Emprunteur;
 import ca.cal.tp1.modele.Livre;
 import ca.cal.tp1.persistence.DocumentDAO;
@@ -53,8 +54,12 @@ public class Main {
 
         preposeService.ajouterDocument(livre);
 
+        DVD dvd = new DVD();
+        dvd.setDirector("Peter Jackson");
+        dvd.setDuree(180);
+        dvd.setRating("PG-13");
 
-
+        preposeService.ajouterDocument(dvd);
         Thread.currentThread().join();
     }
 }
