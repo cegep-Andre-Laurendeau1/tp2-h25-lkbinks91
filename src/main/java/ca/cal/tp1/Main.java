@@ -2,6 +2,7 @@ package ca.cal.tp1;
 
 import ca.cal.tp1.modele.CD;
 import ca.cal.tp1.modele.Emprunteur;
+import ca.cal.tp1.modele.Livre;
 import ca.cal.tp1.persistence.DocumentDAO;
 import ca.cal.tp1.persistence.EmprunteurDAO;
 import ca.cal.tp1.persistence.IDocumentDAO;
@@ -43,6 +44,15 @@ public class Main {
         cd.setNombreExemplaires(5);
 
         preposeService.ajouterDocument(cd);
+
+        Livre livre = new Livre();
+        livre.setISBN("978-2-266-11156-0");
+        livre.setAuteur("J.R.R. Tolkien");
+        livre.setEditeur("Christian Bourgois");
+        livre.setNombrePages(1000L);
+
+        preposeService.ajouterDocument(livre);
+
 
 
         Thread.currentThread().join();
