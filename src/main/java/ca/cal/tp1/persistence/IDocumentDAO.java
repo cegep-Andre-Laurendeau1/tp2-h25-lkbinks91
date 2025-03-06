@@ -12,4 +12,6 @@ public interface IDocumentDAO {
     void update(Document document);
 
     List<Livre> searchLivreByTitre(String motCle);
+
+    List<Livre> searchLivreByAuteur(String auteur);
 }

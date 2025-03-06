@@ -57,6 +57,17 @@ public class Main {
 
         preposeService.ajouterDocument(livre);
 
+        Livre livre2 = new Livre();
+        livre2.setISBN("978-2-266-11156-1");
+        livre2.setAuteur("Magicien d'Oz");
+        livre2.setEditeur("Christian Bourgois");
+        livre2.setNombrePages(200L);
+        livre2.setAnnee(2019L);
+        livre2.setTitre("Le magicien du monde");
+
+        preposeService.ajouterDocument(livre2);
+
+
         DVD dvd = new DVD();
         dvd.setDirector("Peter Jackson");
         dvd.setDuree(180);
@@ -65,16 +76,16 @@ public class Main {
         preposeService.ajouterDocument(dvd);
 
         List<Livre> found = documentDAO.searchLivreByTitre("anneaux");
-        System.out.println("recherche 'anneaux' : ");
+        System.out.println("recherche par titre avec mot-cle 'anneaux' : ");
         for (Livre l : found) {
             System.out.println("Livre trouvé : " + l.getTitre());
         }
 
-
-
-
-
-
+        List<Livre> found2 = documentDAO.searchLivreByAuteur("Oz");
+        System.out.println("recherche par auteur avec mot-cle 'Oz' : ");
+        for (Livre l : found2) {
+            System.out.println("Livre trouvé : " + l.getTitre());
+        }
         Thread.currentThread().join();
     }
 }

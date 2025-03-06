@@ -67,4 +67,15 @@ public class DocumentDAO implements IDocumentDAO {
             em.close();
         }
     }
+
+    public List<Livre> searchLivreByAuteur(String auteur){
+        EntityManager em = emf.createEntityManager();
+        try {
+            return em.createQuery("SELECT l FROM Livre l WHERE LOWER(l.auteur) LIKE LOWER(CONCAT('%', :auteur, '%'))", Livre.class)
+                    .setParameter("auteur", "%" + auteur + "%")
+                    .getResultList();
+        } finally {
+            em.close();
+        }
+    }
 }
