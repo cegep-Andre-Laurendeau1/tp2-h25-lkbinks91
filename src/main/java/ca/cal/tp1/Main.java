@@ -93,6 +93,12 @@ public class Main {
             System.out.println("Livre trouvé : " + l.getTitre());
         }
 
+        List<CD> found4 = documentDAO.searchCDByTitre("Sticky");
+        System.out.println("recherche par CD pat titre avec mot-cle 'Sticky' : ");
+        for (CD c : found4) {
+            System.out.println("CD trouvé : " + c.getTitre());
+        }
+
 
         Thread.currentThread().join();
     }

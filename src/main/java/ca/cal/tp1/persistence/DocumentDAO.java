@@ -1,5 +1,6 @@
 package ca.cal.tp1.persistence;
 
+import ca.cal.tp1.modele.CD;
 import ca.cal.tp1.modele.Document;
 import ca.cal.tp1.modele.Livre;
 import jakarta.persistence.EntityManager;
@@ -84,6 +85,17 @@ public class DocumentDAO implements IDocumentDAO {
         try {
             return em.createQuery("SELECT l FROM Livre l WHERE l.annee = :annee", Livre.class)
                     .setParameter("annee", annee)
+                    .getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    public List<CD> searchCDByTitre(String motCle){
+        EntityManager em = emf.createEntityManager();
+        try {
+            return em.createQuery("SELECT c FROM CD c WHERE LOWER(c.titre) LIKE LOWER(CONCAT('%', :motCle, '%'))", CD.class)
+                    .setParameter("motCle", "%" + motCle + "%")
                     .getResultList();
         } finally {
             em.close();
