@@ -124,4 +124,15 @@ public class DocumentDAO implements IDocumentDAO {
             em.close();
         }
     }
+
+    public List<DVD> searchDVDByArtiste(String artiste){
+        EntityManager em = emf.createEntityManager();
+        try {
+            return em.createQuery("SELECT d FROM DVD d WHERE LOWER(d.artiste) LIKE LOWER(CONCAT('%', :artiste, '%'))", DVD.class)
+                    .setParameter("artiste", "%" + artiste + "%")
+                    .getResultList();
+        } finally {
+            em.close();
+        }
+    }
 }

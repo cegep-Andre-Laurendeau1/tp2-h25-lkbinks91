@@ -73,6 +73,7 @@ public class Main {
         dvd.setDuree(180);
         dvd.setRating("PG-13");
         dvd.setTitre("Harry Potter");
+        dvd.setArtiste("Daniel Radcliffe");
 
         preposeService.ajouterDocument(dvd);
 
@@ -109,6 +110,12 @@ public class Main {
         List<DVD> found6 = documentDAO.searchDVDByTitre("harry");
         System.out.println("recherche de DVD par titre avec mot-cle 'harry' : ");
         for (DVD d : found6) {
+            System.out.println("DVD trouvé : " + d.getTitre());
+        }
+
+        List<DVD> found7 = documentDAO.searchDVDByArtiste("Radcliffe");
+        System.out.println("recherche de DVD par artiste avec mot-cle 'Radcliffe' : ");
+        for (DVD d : found7) {
             System.out.println("DVD trouvé : " + d.getTitre());
         }
 

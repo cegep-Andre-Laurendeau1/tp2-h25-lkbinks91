@@ -24,4 +24,5 @@ public interface IDocumentDAO {
     List<CD> searchCDByArtiste(String artiste);
 
     List<DVD> searchDVDByTitre(String motCle);
+    List<DVD> searchDVDByArtiste(String artiste);
 }

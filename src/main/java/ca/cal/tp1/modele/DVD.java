@@ -14,4 +14,5 @@ public class DVD extends Document {
     private String director;
     private int duree;
     private String rating;
+    private String artiste;
 }
