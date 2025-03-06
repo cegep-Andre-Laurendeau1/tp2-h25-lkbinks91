@@ -13,6 +13,7 @@ import ca.cal.tp1.service.PreposeService;
 import ca.cal.tp1.utils.TcpServer;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws SQLException, InterruptedException {
@@ -51,6 +52,8 @@ public class Main {
         livre.setAuteur("J.R.R. Tolkien");
         livre.setEditeur("Christian Bourgois");
         livre.setNombrePages(1000L);
+        livre.setAnnee(2012L);
+        livre.setTitre("Le seigneur des anneaux");
 
         preposeService.ajouterDocument(livre);
 
@@ -60,6 +63,18 @@ public class Main {
         dvd.setRating("PG-13");
 
         preposeService.ajouterDocument(dvd);
+
+        List<Livre> found = documentDAO.searchLivreByTitre("anneaux");
+        System.out.println("recherche 'anneaux' : ");
+        for (Livre l : found) {
+            System.out.println("Livre trouvé : " + l.getTitre());
+        }
+
+
+
+
+
+
         Thread.currentThread().join();
     }
 }

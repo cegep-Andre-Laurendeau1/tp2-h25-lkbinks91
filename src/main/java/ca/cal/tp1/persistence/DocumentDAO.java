@@ -1,6 +1,7 @@
 package ca.cal.tp1.persistence;
 
 import ca.cal.tp1.modele.Document;
+import ca.cal.tp1.modele.Livre;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -51,6 +52,17 @@ public class DocumentDAO implements IDocumentDAO {
             em.getTransaction().begin();
             em.merge(document);
             em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+    }
+
+    public List<Livre> searchLivreByTitre(String motCle){
+        EntityManager em = emf.createEntityManager();
+        try {
+            return em.createQuery("SELECT l FROM Livre l WHERE LOWER(l.titre) LIKE LOWER(CONCAT('%', :motCle, '%'))", Livre.class)
+                    .setParameter("motCle", "%" + motCle + "%")
+                    .getResultList();
         } finally {
             em.close();
         }
