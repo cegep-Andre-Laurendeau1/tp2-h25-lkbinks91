@@ -72,6 +72,7 @@ public class Main {
         dvd.setDirector("Peter Jackson");
         dvd.setDuree(180);
         dvd.setRating("PG-13");
+        dvd.setTitre("Harry Potter");
 
         preposeService.ajouterDocument(dvd);
 
@@ -94,9 +95,21 @@ public class Main {
         }
 
         List<CD> found4 = documentDAO.searchCDByTitre("Sticky");
-        System.out.println("recherche par CD pat titre avec mot-cle 'Sticky' : ");
+        System.out.println("recherche de CD par titre avec mot-cle 'Sticky' : ");
         for (CD c : found4) {
             System.out.println("CD trouvé : " + c.getTitre());
+        }
+
+        List<CD> found5 = documentDAO.searchCDByArtiste("Stones");
+        System.out.println("recherche de CD par artiste avec mot-cle 'Stones' : ");
+        for (CD c : found5) {
+            System.out.println("CD trouvé : " + c.getTitre());
+        }
+
+        List<DVD> found6 = documentDAO.searchDVDByTitre("harry");
+        System.out.println("recherche de DVD par titre avec mot-cle 'harry' : ");
+        for (DVD d : found6) {
+            System.out.println("DVD trouvé : " + d.getTitre());
         }
 
 

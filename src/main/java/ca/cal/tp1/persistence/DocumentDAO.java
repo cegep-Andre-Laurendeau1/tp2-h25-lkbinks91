@@ -1,6 +1,7 @@
 package ca.cal.tp1.persistence;
 
 import ca.cal.tp1.modele.CD;
+import ca.cal.tp1.modele.DVD;
 import ca.cal.tp1.modele.Document;
 import ca.cal.tp1.modele.Livre;
 import jakarta.persistence.EntityManager;
@@ -95,6 +96,28 @@ public class DocumentDAO implements IDocumentDAO {
         EntityManager em = emf.createEntityManager();
         try {
             return em.createQuery("SELECT c FROM CD c WHERE LOWER(c.titre) LIKE LOWER(CONCAT('%', :motCle, '%'))", CD.class)
+                    .setParameter("motCle", "%" + motCle + "%")
+                    .getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    public List<CD> searchCDByArtiste(String artiste){
+        EntityManager em = emf.createEntityManager();
+        try {
+            return em.createQuery("SELECT c FROM CD c WHERE LOWER(c.artiste) LIKE LOWER(CONCAT('%', :artiste, '%'))", CD.class)
+                    .setParameter("artiste", "%" + artiste + "%")
+                    .getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    public List<DVD> searchDVDByTitre(String motCle){
+        EntityManager em = emf.createEntityManager();
+        try {
+            return em.createQuery("SELECT d FROM DVD d WHERE LOWER(d.titre) LIKE LOWER(CONCAT('%', :motCle, '%'))", DVD.class)
                     .setParameter("motCle", "%" + motCle + "%")
                     .getResultList();
         } finally {

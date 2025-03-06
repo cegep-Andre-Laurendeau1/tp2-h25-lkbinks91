@@ -1,6 +1,7 @@
 package ca.cal.tp1.persistence;
 
 import ca.cal.tp1.modele.CD;
+import ca.cal.tp1.modele.DVD;
 import ca.cal.tp1.modele.Document;
 import ca.cal.tp1.modele.Livre;
 
@@ -19,4 +20,8 @@ public interface IDocumentDAO {
     List<Livre> searchLivreByAnnee(Long annee);
 
     List<CD> searchCDByTitre(String motCle);
+
+    List<CD> searchCDByArtiste(String artiste);
+
+    List<DVD> searchDVDByTitre(String motCle);
 }
