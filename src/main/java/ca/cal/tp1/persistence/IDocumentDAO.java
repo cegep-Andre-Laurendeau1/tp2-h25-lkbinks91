@@ -14,4 +14,6 @@ public interface IDocumentDAO {
     List<Livre> searchLivreByTitre(String motCle);
 
     List<Livre> searchLivreByAuteur(String auteur);
+
+    List<Livre> searchLivreByAnnee(Long annee);
 }

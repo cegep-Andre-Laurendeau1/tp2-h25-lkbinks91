@@ -52,7 +52,7 @@ public class Main {
         livre.setAuteur("J.R.R. Tolkien");
         livre.setEditeur("Christian Bourgois");
         livre.setNombrePages(1000L);
-        livre.setAnnee(2012L);
+        livre.setAnnee(2019L);
         livre.setTitre("Le seigneur des anneaux");
 
         preposeService.ajouterDocument(livre);
@@ -86,6 +86,14 @@ public class Main {
         for (Livre l : found2) {
             System.out.println("Livre trouvé : " + l.getTitre());
         }
+
+        List<Livre> found3 = documentDAO.searchLivreByAnnee(2019L);
+        System.out.println("recherche par annee 2019 : ");
+        for (Livre l : found3) {
+            System.out.println("Livre trouvé : " + l.getTitre());
+        }
+
+
         Thread.currentThread().join();
     }
 }

@@ -78,4 +78,15 @@ public class DocumentDAO implements IDocumentDAO {
             em.close();
         }
     }
+
+    public List<Livre> searchLivreByAnnee(Long annee){
+        EntityManager em = emf.createEntityManager();
+        try {
+            return em.createQuery("SELECT l FROM Livre l WHERE l.annee = :annee", Livre.class)
+                    .setParameter("annee", annee)
+                    .getResultList();
+        } finally {
+            em.close();
+        }
+    }
 }
