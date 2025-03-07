@@ -47,8 +47,10 @@ public class Main {
         cd.setDuree(60L);
         cd.setGenre("Rock");
         cd.setNombreExemplaires(5L);
-
         preposeService.ajouterDocument(cd);
+
+        Long disponible = documentDAO.getexemplairesDisponibles(cd.getDocumentID());
+        System.out.println("Nombre d'exemplaires disponibles : " + disponible);
 
         Livre livre = new Livre();
         livre.setISBN("978-2-266-11156-0");
@@ -83,6 +85,9 @@ public class Main {
         dvd.setNombreExemplaires(15L);
 
         preposeService.ajouterDocument(dvd);
+
+        Long disponible2 = documentDAO.getexemplairesDisponibles(dvd.getDocumentID());
+        System.out.println("Nombre d'exemplaires disponibles : " + disponible2);
 
         List<Livre> found = documentDAO.searchLivreByTitre("anneaux");
         System.out.println("recherche par titre avec mot-cle 'anneaux' : ");

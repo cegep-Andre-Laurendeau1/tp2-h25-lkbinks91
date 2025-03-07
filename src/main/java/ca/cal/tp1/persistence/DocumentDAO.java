@@ -14,6 +14,8 @@ public class DocumentDAO implements IDocumentDAO {
     private static final EntityManagerFactory emf =
             Persistence.createEntityManagerFactory("TP2-PU");
 
+
+
     @Override
     public void save(Document document) {
         EntityManager em = emf.createEntityManager();
@@ -135,4 +137,30 @@ public class DocumentDAO implements IDocumentDAO {
             em.close();
         }
     }
+
+    @Override
+    public Long getexemplairesDisponibles(Long documentId) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            Document doc = em.find(Document.class, documentId);
+            if (doc == null) {
+                return 0L;
+            }
+            Long totalExemplaires = doc.getNombreExemplaires();
+
+            Long nbEmpruntes = em.createQuery(
+                            "SELECT COUNT(ed) FROM EmpruntDetail ed " +
+                                    "WHERE ed.document.documentID = :docId " +
+                                    "AND ed.dateRetourActuelle IS NULL",
+                            Long.class
+                    )
+                    .setParameter("docId", documentId)
+                    .getSingleResult();
+
+            return totalExemplaires - nbEmpruntes.intValue();
+        } finally {
+            em.close();
+        }    }
+
+
 }

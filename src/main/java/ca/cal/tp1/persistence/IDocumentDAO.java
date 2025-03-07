@@ -8,6 +8,7 @@ import ca.cal.tp1.modele.Livre;
 import java.util.List;
 
 public interface IDocumentDAO {
+    public Long getexemplairesDisponibles(Long documentId);
     void save(Document document);
     Document get(Long id);
     List<Document> getAll();
