@@ -15,7 +15,7 @@ import java.util.List;
 public class Emprunt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int borrowID;
+    private Long id;
     private Date dateEmprunt;
     private String status;
     @ManyToOne

@@ -13,7 +13,7 @@ import java.time.LocalDate;
 public class Amende {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int fineID;
+    private Long id;
     private double montant;
     private LocalDate dateCreation;
     private boolean status;

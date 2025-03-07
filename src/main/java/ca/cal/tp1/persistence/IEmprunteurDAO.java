@@ -4,5 +4,5 @@ import ca.cal.tp1.modele.Emprunteur;
 
 public interface IEmprunteurDAO {
     void save(Emprunteur emprunteur);
-    Emprunteur get(int id);
+    Emprunteur get(Long id);
 }

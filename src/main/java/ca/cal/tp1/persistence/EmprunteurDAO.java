@@ -23,7 +23,7 @@ public class EmprunteurDAO implements IEmprunteurDAO {
     }
 
     @Override
-    public Emprunteur get(int id) {
+    public Emprunteur get(Long id) {
         EntityManager em = emf.createEntityManager();
         try {
             return em.find(Emprunteur.class, id);

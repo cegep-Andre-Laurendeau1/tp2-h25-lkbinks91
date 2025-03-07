@@ -15,7 +15,7 @@ public class EmprunteurService {
         emprunteurDAO.save(emprunteur);
     }
 
-    public Emprunteur getEmprunteur(int id) {
+    public Emprunteur getEmprunteur(Long id) {
         return emprunteurDAO.get(id);
     }
 }

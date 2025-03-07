@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface IDocumentDAO {
     void save(Document document);
-    Document get(int id);
+    Document get(Long id);
     List<Document> getAll();
     void update(Document document);
 

@@ -13,7 +13,7 @@ import java.time.LocalDate;
 public class EmpruntDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int lineItemID;
+    private Long id;
     private LocalDate dateRetourPrevue;
     private LocalDate dateRetourActuelle;
     private String status;

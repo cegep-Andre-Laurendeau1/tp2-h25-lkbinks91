@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @DiscriminatorValue("DVD")
 public class DVD extends Document {
     private String director;
-    private int duree;
+    private Long duree;
     private String rating;
     private String artiste;
 }

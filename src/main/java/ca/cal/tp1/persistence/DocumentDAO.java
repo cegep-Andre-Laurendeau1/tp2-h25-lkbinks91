@@ -27,7 +27,7 @@ public class DocumentDAO implements IDocumentDAO {
     }
 
     @Override
-    public Document get(int id) {
+    public Document get(Long id) {
         EntityManager em = emf.createEntityManager();
         try {
             return em.find(Document.class, id);

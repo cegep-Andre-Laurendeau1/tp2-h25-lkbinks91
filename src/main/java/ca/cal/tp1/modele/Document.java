@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class Document {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int documentID;
+    private Long documentID;
     private String titre;
-    private int nombreExemplaires;
+    private Long nombreExemplaires;
 }

@@ -13,6 +13,6 @@ import lombok.NoArgsConstructor;
 @DiscriminatorValue("CD")
 public class CD extends Document {
     private String artiste;
-    private int duree;
+    private Long duree;
     private String genre;
 }
