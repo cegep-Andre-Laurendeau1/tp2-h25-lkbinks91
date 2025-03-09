@@ -77,4 +77,13 @@ public class EmprunteurService {
 
         return EmpruntDTO.fromEntity(emprunt.getId(), dateEmpruntStr, dateRetourStr, emp.getId(), doc.getDocumentID());
     }
+
+    public List<EmpruntDTO> documentsEmprunter(Long emprunteurId, List<Long> documentIds) {
+        List<EmpruntDTO> emprunts = new ArrayList<>();
+        for (Long documentId : documentIds) {
+            EmpruntDTO empruntDTO = emprunterDocument(emprunteurId, documentId);
+            emprunts.add(empruntDTO);
+        }
+        return emprunts;
+    }
 }

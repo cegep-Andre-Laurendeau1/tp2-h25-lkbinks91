@@ -10,8 +10,10 @@ import ca.cal.tp1.service.dto.EmpruntDTO;
 import ca.cal.tp1.service.dto.LivreDTO;
 import ca.cal.tp1.utils.TcpServer;
 
+import java.sql.Array;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -136,10 +138,13 @@ public class Main {
             DVDDTO dvdDTO = DVDDTO.fromEntity(d);
             System.out.println("DVD trouvé : " + dvdDTO.titre());
         }
-        
+
         try{
-            EmpruntDTO empruntDTO = emprunteurService.emprunterDocument(retrievedEmprunteur.getId(), livre.getDocumentID());
-            System.out.println("Emprunt effectué : " + empruntDTO);
+            List<Long> documentIds = Arrays.asList(livre.getDocumentID(), dvd.getDocumentID());
+            List<EmpruntDTO> emprunts = emprunteurService.documentsEmprunter(retrievedEmprunteur.getId(), documentIds);
+            for (EmpruntDTO emprunt : emprunts) {
+                System.out.println("Emprunt effectué : " + emprunt);
+            }
         } catch (Exception e) {
             System.out.println("Erreur lors de l'emprunt : " + e.getMessage());
         }
