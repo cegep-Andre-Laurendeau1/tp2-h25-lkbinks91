@@ -142,6 +142,7 @@ public class Main {
         try{
             List<Long> documentIds = Arrays.asList(livre.getDocumentID(), dvd.getDocumentID());
             List<EmpruntDTO> emprunts = emprunteurService.documentsEmprunter(retrievedEmprunteur.getId(), documentIds);
+            System.out.println("Emprunteur : " + retrievedEmprunteur.getName());
             for (EmpruntDTO emprunt : emprunts) {
                 System.out.println("Emprunt effectué : " + emprunt);
             }
