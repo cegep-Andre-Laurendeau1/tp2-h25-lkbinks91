@@ -14,8 +14,5 @@ public class PreposeService {
         documentDAO.save(document);
     }
 
-    public void updateDocument(Document document) {
-        documentDAO.update(document);
-    }
 
 }

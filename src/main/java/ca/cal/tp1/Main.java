@@ -1,21 +1,18 @@
 package ca.cal.tp1;
 
-import ca.cal.tp1.modele.CD;
-import ca.cal.tp1.modele.DVD;
-import ca.cal.tp1.modele.Emprunteur;
-import ca.cal.tp1.modele.Livre;
-import ca.cal.tp1.persistence.DocumentDAO;
-import ca.cal.tp1.persistence.EmprunteurDAO;
-import ca.cal.tp1.persistence.IDocumentDAO;
-import ca.cal.tp1.persistence.IEmprunteurDAO;
+import ca.cal.tp1.modele.*;
+import ca.cal.tp1.persistence.*;
 import ca.cal.tp1.service.EmprunteurService;
 import ca.cal.tp1.service.PreposeService;
 import ca.cal.tp1.service.dto.CDDTO;
 import ca.cal.tp1.service.dto.DVDDTO;
+import ca.cal.tp1.service.dto.EmpruntDTO;
 import ca.cal.tp1.service.dto.LivreDTO;
 import ca.cal.tp1.utils.TcpServer;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 public class Main {
@@ -23,8 +20,11 @@ public class Main {
         // Votre script qui utilise votre API ici
         TcpServer.startTcpServer();
         IEmprunteurDAO emprunteurDAO = new EmprunteurDAO();
-        EmprunteurService emprunteurService = new EmprunteurService(emprunteurDAO);
+        IEmpruntDAO empruntDAO = new EmpruntDAO();
+        IDocumentDAO documentDAO = new DocumentDAO();
 
+        EmprunteurService emprunteurService = new EmprunteurService(emprunteurDAO, empruntDAO, documentDAO);
+        PreposeService preposeService = new PreposeService(documentDAO);
 
         Emprunteur emprunteur = new Emprunteur(0L, "LeonardoVinci", "LeonDivin@Tp1.com", "439-001-1122");
         emprunteurService.ajouteEmprunteur(emprunteur);
@@ -38,8 +38,6 @@ public class Main {
             System.out.println(" Emprunteur non trouvé.");
         }
 
-        IDocumentDAO documentDAO = new DocumentDAO();
-        PreposeService preposeService = new PreposeService(documentDAO);
 
         CD cd = new CD();
         cd.setTitre("Sticky fingers");
@@ -59,7 +57,7 @@ public class Main {
         livre.setNombrePages(1000L);
         livre.setAnnee(2019L);
         livre.setTitre("Le seigneur des anneaux");
-        livre.setNombreExemplaires(10L);
+        livre.setNombreExemplaires(3L);
 
         preposeService.ajouterDocument(livre);
 
@@ -88,6 +86,7 @@ public class Main {
 
         Long disponible2 = documentDAO.getexemplairesDisponibles(dvd.getDocumentID());
         System.out.println("Nombre d'exemplaires disponibles : " + disponible2);
+
 
         List<Livre> found = documentDAO.searchLivreByTitre("anneaux");
         System.out.println("recherche par titre avec mot-cle 'anneaux' : ");
@@ -136,6 +135,13 @@ public class Main {
         for (DVD d : found7) {
             DVDDTO dvdDTO = DVDDTO.fromEntity(d);
             System.out.println("DVD trouvé : " + dvdDTO.titre());
+        }
+        
+        try{
+            EmpruntDTO empruntDTO = emprunteurService.emprunterDocument(retrievedEmprunteur.getId(), livre.getDocumentID());
+            System.out.println("Emprunt effectué : " + empruntDTO);
+        } catch (Exception e) {
+            System.out.println("Erreur lors de l'emprunt : " + e.getMessage());
         }
         Thread.currentThread().join();
     }

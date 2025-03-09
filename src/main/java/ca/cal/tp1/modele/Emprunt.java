@@ -21,7 +21,7 @@ public class Emprunt {
     @ManyToOne
     private Emprunteur emprunteur;
 
-    @OneToMany(mappedBy = "emprunt")
+    @OneToMany(mappedBy = "emprunt", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EmpruntDetail> items = new ArrayList<>();
 
 }
