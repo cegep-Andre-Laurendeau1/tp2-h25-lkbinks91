@@ -38,29 +38,6 @@ public class DocumentDAO implements IDocumentDAO {
         }
     }
 
-    @Override
-    public List<Document> getAll() {
-        EntityManager em = emf.createEntityManager();
-        try {
-            return em.createQuery("SELECT d FROM Document d", Document.class)
-                    .getResultList();
-        } finally {
-            em.close();
-        }
-    }
-
-    @Override
-    public void update(Document document) {
-        EntityManager em = emf.createEntityManager();
-        try {
-            em.getTransaction().begin();
-            em.merge(document);
-            em.getTransaction().commit();
-        } finally {
-            em.close();
-        }
-    }
-
     public List<Livre> searchLivreByTitre(String motCle){
         EntityManager em = emf.createEntityManager();
         try {

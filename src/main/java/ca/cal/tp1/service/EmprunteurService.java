@@ -47,7 +47,7 @@ public class EmprunteurService {
         }
 
         Emprunt emprunt = new Emprunt();
-        emprunt.setDateEmprunt(new Date());
+        emprunt.setDateEmprunt(LocalDate.now());
         emprunt.setStatus("En cours");
         emprunt.setEmprunteur(emp);
         emprunt = empruntDAO.saveEmprunt(emprunt);

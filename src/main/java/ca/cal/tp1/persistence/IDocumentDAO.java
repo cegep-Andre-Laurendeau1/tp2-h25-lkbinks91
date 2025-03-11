@@ -11,8 +11,6 @@ public interface IDocumentDAO {
     public Long getexemplairesDisponibles(Long documentId);
     void save(Document document);
     Document get(Long id);
-    List<Document> getAll();
-    void update(Document document);
 
     List<Livre> searchLivreByTitre(String motCle);
 
