@@ -1,155 +1,150 @@
 package ca.cal.tp1;
 
-import ca.cal.tp1.modele.*;
+import ca.cal.tp1.exception.DocumentNotFoundException;
+import ca.cal.tp1.exception.EmprunteurNotFoundException;
+import ca.cal.tp1.exception.NoAvailableCopiesException;
+import ca.cal.tp1.exception.UnsupportedDocumentTypeException;
 import ca.cal.tp1.persistence.*;
 import ca.cal.tp1.service.EmprunteurService;
 import ca.cal.tp1.service.PreposeService;
-import ca.cal.tp1.service.dto.CDDTO;
-import ca.cal.tp1.service.dto.DVDDTO;
-import ca.cal.tp1.service.dto.EmpruntDTO;
-import ca.cal.tp1.service.dto.LivreDTO;
+import ca.cal.tp1.service.dto.*;
 import ca.cal.tp1.utils.TcpServer;
 
-import java.sql.Array;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws SQLException, InterruptedException {
-        // Votre script qui utilise votre API ici
         TcpServer.startTcpServer();
-        IEmprunteurDAO emprunteurDAO = new EmprunteurDAO();
-        IEmpruntDAO empruntDAO = new EmpruntDAO();
-        IDocumentDAO documentDAO = new DocumentDAO();
+
+        EmprunteurRepository emprunteurDAO = new EmprunteurDAO();
+        EmpruntRepository empruntDAO = new EmpruntDAO();
+        DocumentRepository documentDAO = new DocumentDAO();
 
         EmprunteurService emprunteurService = new EmprunteurService(emprunteurDAO, empruntDAO, documentDAO);
         PreposeService preposeService = new PreposeService(documentDAO);
 
-        Emprunteur emprunteur = new Emprunteur(0L, "LeonardoVinci", "LeonDivin@Tp1.com", "439-001-1122");
-        emprunteurService.ajouteEmprunteur(emprunteur);
-        System.out.println(" Emprunteur ajouté avec ID : " + emprunteur.getId());
+        EmprunteurDTO nouvelEmprunteur = new EmprunteurDTO(
+                0L,
+                "LeonardoVinci",
+                "LeonDivin@Tp1.com",
+                "439-001-1122"
+        );
 
+        Long emprunteurId = emprunteurService.ajouteEmprunteur(nouvelEmprunteur);
+        System.out.println(" Emprunteur ajouté avec ID : " + emprunteurId);
 
-        Emprunteur retrievedEmprunteur = emprunteurService.getEmprunteur(emprunteur.getId());
+        EmprunteurDTO retrievedEmprunteur = emprunteurService.getEmprunteur(emprunteurId);
         if (retrievedEmprunteur != null) {
-            System.out.println(" Emprunteur récupéré : " + retrievedEmprunteur.getName());
+            System.out.println(" Emprunteur récupéré : " + retrievedEmprunteur.name());
         } else {
             System.out.println(" Emprunteur non trouvé.");
         }
 
+        CDDTO cdDTO = new CDDTO(
+                "Sticky fingers",
+                "Rolling stones",
+                60L,
+                "Rock",
+                5L
+        );
+        Long cdId = preposeService.ajouterDocument(cdDTO);
 
-        CD cd = new CD();
-        cd.setTitre("Sticky fingers");
-        cd.setArtiste("Rolling stones");
-        cd.setDuree(60L);
-        cd.setGenre("Rock");
-        cd.setNombreExemplaires(5L);
-        preposeService.ajouterDocument(cd);
-
-        Long disponible = documentDAO.getexemplairesDisponibles(cd.getDocumentID());
+        Long disponible = documentDAO.getexemplairesDisponibles(cdId);
         System.out.println("Nombre d'exemplaires disponibles : " + disponible);
 
-        Livre livre = new Livre();
-        livre.setISBN("978-2-266-11156-0");
-        livre.setAuteur("J.R.R. Tolkien");
-        livre.setEditeur("Christian Bourgois");
-        livre.setNombrePages(1000L);
-        livre.setAnnee(2019L);
-        livre.setTitre("Le seigneur des anneaux");
-        livre.setNombreExemplaires(3L);
+        LivreDTO livreDTO = new LivreDTO(
+                "Le seigneur des anneaux",
+                "978-2-266-11156-0",
+                "J.R.R. Tolkien",
+                "Christian Bourgois",
+                1000L,
+                2019L,
+                3L
+        );
+        Long livreId =  preposeService.ajouterDocument(livreDTO);
+        System.out.println("Livre ajouté avec ID : " + livreId);
 
-        preposeService.ajouterDocument(livre);
+        LivreDTO livre2DTO = new LivreDTO(
+                "Le magicien du monde",
+                "978-2-266-11156-1",
+                "Magicien d'Oz",
+                "Christian Bourgois",
+                200L,
+                2019L,
+                20L
+        );
+        Long livre2Id = preposeService.ajouterDocument(livre2DTO);
+        System.out.println("Livre ajouté avec ID : " + livre2Id);
 
-        Livre livre2 = new Livre();
-        livre2.setISBN("978-2-266-11156-1");
-        livre2.setAuteur("Magicien d'Oz");
-        livre2.setEditeur("Christian Bourgois");
-        livre2.setNombrePages(200L);
-        livre2.setAnnee(2019L);
-        livre2.setTitre("Le magicien du monde");
-        livre2.setNombreExemplaires(20L);
+        DVDDTO dvdDTO = new DVDDTO(
+                "Peter Jackson",
+                180L,
+                "PG-13",
+                "Harry Potter",
+                "Daniel Radcliffe",
+                15L
+        );
+        Long dvdId = preposeService.ajouterDocument(dvdDTO);
 
-        preposeService.ajouterDocument(livre2);
-
-
-
-        DVD dvd = new DVD();
-        dvd.setDirector("Peter Jackson");
-        dvd.setDuree(180L);
-        dvd.setRating("PG-13");
-        dvd.setTitre("Harry Potter");
-        dvd.setArtiste("Daniel Radcliffe");
-        dvd.setNombreExemplaires(15L);
-
-        preposeService.ajouterDocument(dvd);
-
-        Long disponible2 = documentDAO.getexemplairesDisponibles(dvd.getDocumentID());
+        Long disponible2 = documentDAO.getexemplairesDisponibles(dvdId);
         System.out.println("Nombre d'exemplaires disponibles : " + disponible2);
 
+        List<LivreDTO> livresTitre = documentDAO.searchLivreByTitre("anneaux").stream()
+                .map(LivreDTO::fromEntity)
+                .toList();
+        System.out.println("Recherche par titre avec mot-clé 'anneaux' : ");
+        livresTitre.forEach(l -> System.out.println("Livre trouvé : " + l.titre()));
 
-        List<Livre> found = documentDAO.searchLivreByTitre("anneaux");
-        System.out.println("recherche par titre avec mot-cle 'anneaux' : ");
-        for (Livre l : found) {
-            LivreDTO livreDTO = LivreDTO.fromEntity(l);
-            System.out.println("Livre trouvé : " + livreDTO.titre());
+        List<LivreDTO> livresAuteur = documentDAO.searchLivreByAuteur("Oz").stream()
+                .map(LivreDTO::fromEntity)
+                .toList();
+        System.out.println("Recherche par auteur avec mot-clé 'Oz' : ");
+        livresAuteur.forEach(l -> System.out.println("Livre trouvé : " + l.titre()));
+
+        List<LivreDTO> livresAnnee = documentDAO.searchLivreByAnnee(2019L).stream()
+                .map(LivreDTO::fromEntity)
+                .toList();
+        System.out.println("Recherche par année 2019 : ");
+        livresAnnee.forEach(l -> System.out.println("Livre trouvé : " + l.titre()));
+
+        List<CDDTO> cdTitre = documentDAO.searchCDByTitre("Sticky").stream()
+                .map(CDDTO::fromEntity)
+                .toList();
+        System.out.println("Recherche de CD par titre avec mot-clé 'Sticky' : ");
+        cdTitre.forEach(c -> System.out.println("CD trouvé : " + c.titre()));
+
+        List<CDDTO> cdArtiste = documentDAO.searchCDByArtiste("Stones").stream()
+                .map(CDDTO::fromEntity)
+                .toList();
+        System.out.println("Recherche de CD par artiste avec mot-clé 'Stones' : ");
+        cdArtiste.forEach(c -> System.out.println("CD trouvé : " + c.titre()));
+
+        List<DVDDTO> dvdTitre = documentDAO.searchDVDByTitre("harry").stream()
+                .map(DVDDTO::fromEntity)
+                .toList();
+        System.out.println("Recherche de DVD par titre avec mot-clé 'harry' : ");
+        dvdTitre.forEach(d -> System.out.println("DVD trouvé : " + d.titre()));
+
+        List<DVDDTO> dvdArtiste = documentDAO.searchDVDByArtiste("Radcliffe").stream()
+                .map(DVDDTO::fromEntity)
+                .toList();
+        System.out.println("Recherche de DVD par artiste avec mot-clé 'Radcliffe' : ");
+        dvdArtiste.forEach(d -> System.out.println("DVD trouvé : " + d.titre()));
+
+        try {
+            System.out.println("\nTest d'emprunt de plusieurs documents :");
+            List<Long> documentIds = Arrays.asList(dvdId, cdId);
+            List<EmpruntDTO> emprunts = emprunteurService.documentsEmprunter(emprunteurId, documentIds);
+            System.out.println("Emprunteur : " + retrievedEmprunteur.name());
+            emprunts.forEach(emprunt -> System.out.println("Emprunt effectué : " + emprunt));
+        } catch (EmprunteurNotFoundException | DocumentNotFoundException | NoAvailableCopiesException |
+                 UnsupportedDocumentTypeException e) {
+            System.out.println("Erreur lors de l'emprunt multiple : " + e.getMessage());
         }
 
-        List<Livre> found2 = documentDAO.searchLivreByAuteur("Oz");
-        System.out.println("recherche par auteur avec mot-cle 'Oz' : ");
-        for (Livre l : found2) {
-            LivreDTO livreDTO = LivreDTO.fromEntity(l);
-            System.out.println("Livre trouvé : " + livreDTO.titre());
-        }
 
-        List<Livre> found3 = documentDAO.searchLivreByAnnee(2019L);
-        System.out.println("recherche par annee 2019 : ");
-        for (Livre l : found3) {
-            LivreDTO livreDTO = LivreDTO.fromEntity(l);
-            System.out.println("Livre trouvé : " + livreDTO.titre());
-        }
-
-        List<CD> found4 = documentDAO.searchCDByTitre("Sticky");
-        System.out.println("recherche de CD par titre avec mot-cle 'Sticky' : ");
-        for (CD c : found4) {
-            CDDTO cdDTO = CDDTO.fromEntity(c);
-            System.out.println("CD trouvé : " + cdDTO.titre());
-        }
-
-        List<CD> found5 = documentDAO.searchCDByArtiste("Stones");
-        System.out.println("recherche de CD par artiste avec mot-cle 'Stones' : ");
-        for (CD c : found5) {
-            CDDTO cdDTO = CDDTO.fromEntity(c);
-            System.out.println("CD trouvé : " + cdDTO.titre());
-        }
-
-        List<DVD> found6 = documentDAO.searchDVDByTitre("harry");
-        System.out.println("recherche de DVD par titre avec mot-cle 'harry' : ");
-        for (DVD d : found6) {
-            DVDDTO dvdDTO = DVDDTO.fromEntity(d);
-            System.out.println("DVD trouvé : " + dvdDTO.titre());
-        }
-
-        List<DVD> found7 = documentDAO.searchDVDByArtiste("Radcliffe");
-        System.out.println("recherche de DVD par artiste avec mot-cle 'Radcliffe' : ");
-        for (DVD d : found7) {
-            DVDDTO dvdDTO = DVDDTO.fromEntity(d);
-            System.out.println("DVD trouvé : " + dvdDTO.titre());
-        }
-
-        try{
-            List<Long> documentIds = Arrays.asList(livre.getDocumentID(), dvd.getDocumentID());
-            List<EmpruntDTO> emprunts = emprunteurService.documentsEmprunter(retrievedEmprunteur.getId(), documentIds);
-            System.out.println("Emprunteur : " + retrievedEmprunteur.getName());
-            for (EmpruntDTO emprunt : emprunts) {
-                System.out.println("Emprunt effectué : " + emprunt);
-            }
-        } catch (Exception e) {
-            System.out.println("Erreur lors de l'emprunt : " + e.getMessage());
-        }
         Thread.currentThread().join();
     }
 }
-

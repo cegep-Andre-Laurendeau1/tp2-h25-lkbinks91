@@ -6,7 +6,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
-public class EmpruntDAO implements IEmpruntDAO {
+public class EmpruntDAO implements EmpruntRepository {
     private static final EntityManagerFactory emf =
             Persistence.createEntityManagerFactory("TP2-PU");
 

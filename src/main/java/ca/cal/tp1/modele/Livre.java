@@ -16,4 +16,5 @@ public class Livre extends Document {
     private String editeur;
     private Long nombrePages;
     private Long annee;
+    private Long nombreExemplaires;
 }

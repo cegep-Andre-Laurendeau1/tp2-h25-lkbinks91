@@ -23,8 +23,4 @@ public class Emprunteur extends Utilisateur {
     private List<Emprunt> emprunts = new ArrayList<>();
     @OneToMany(mappedBy = "emprunteur")
     private List<Amende> amendes = new ArrayList<>();
-
-    public Emprunteur(Long id, String name, String email, String phoneNumber) {
-        super(id, name, email, phoneNumber);
-    }
 }

@@ -1,49 +1,50 @@
 package ca.cal.tp1.service;
 
+import ca.cal.tp1.exception.DocumentNotFoundException;
+import ca.cal.tp1.exception.EmprunteurNotFoundException;
+import ca.cal.tp1.exception.NoAvailableCopiesException;
+import ca.cal.tp1.exception.UnsupportedDocumentTypeException;
 import ca.cal.tp1.modele.*;
-import ca.cal.tp1.persistence.EmprunteurDAO;
-import ca.cal.tp1.persistence.IDocumentDAO;
-import ca.cal.tp1.persistence.IEmpruntDAO;
-import ca.cal.tp1.persistence.IEmprunteurDAO;
+import ca.cal.tp1.persistence.DocumentRepository;
+import ca.cal.tp1.persistence.EmpruntRepository;
+import ca.cal.tp1.persistence.EmprunteurRepository;
 import ca.cal.tp1.service.dto.EmpruntDTO;
+import ca.cal.tp1.service.dto.EmprunteurDTO;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class EmprunteurService {
-    private final IEmprunteurDAO emprunteurDAO;
-    private final IEmpruntDAO empruntDAO;
+    private final EmprunteurRepository emprunteurDAO;
+    private final EmpruntRepository empruntDAO;
+    private final DocumentRepository documentDAO;
 
-    private final IDocumentDAO documentDAO;
-
-    public EmprunteurService(IEmprunteurDAO emprunteurDAO, IEmpruntDAO empruntDAO, IDocumentDAO documentDAO) {
+    public EmprunteurService(EmprunteurRepository emprunteurDAO, EmpruntRepository empruntDAO, DocumentRepository documentDAO) {
         this.emprunteurDAO = emprunteurDAO;
         this.empruntDAO = empruntDAO;
         this.documentDAO = documentDAO;
     }
 
-    public void ajouteEmprunteur(Emprunteur emprunteur) {
+    public Long ajouteEmprunteur(EmprunteurDTO dto) {
+        Emprunteur emprunteur = new Emprunteur();
+        emprunteur.setId(dto.id());
+        emprunteur.setName(dto.name());
+        emprunteur.setEmail(dto.email());
+        emprunteur.setPhoneNumber(dto.phoneNumber());
         emprunteurDAO.save(emprunteur);
+        return emprunteur.getId();
     }
 
-    public Emprunteur getEmprunteur(Long id) {
-        return emprunteurDAO.get(id);
+    public EmprunteurDTO getEmprunteur(Long id) {
+        Emprunteur emprunteur = emprunteurDAO.get(id);
+        return emprunteur != null ? EmprunteurDTO.fromEntity(emprunteur) : null;
     }
 
-    public EmpruntDTO emprunterDocument(Long emprunteurId, Long documentId) {
+    public List<EmpruntDTO> documentsEmprunter(Long emprunteurId, List<Long> documentIds) throws EmprunteurNotFoundException, DocumentNotFoundException, NoAvailableCopiesException, UnsupportedDocumentTypeException {
         Emprunteur emp = emprunteurDAO.get(emprunteurId);
         if (emp == null) {
-            throw new IllegalArgumentException("Emprunteur introuvable : " + emprunteurId);
-        }
-        Document doc = documentDAO.get(documentId);
-        if (doc == null) {
-            throw new IllegalArgumentException("Document introuvable : " + documentId);
-        }
-        Long dispo = documentDAO.getexemplairesDisponibles(doc.getDocumentID());
-        if (dispo == 0) {
-            throw new IllegalStateException("Aucun exemplaire disponible pour : " + doc.getTitre());
+            throw new EmprunteurNotFoundException("Emprunteur introuvable : " + emprunteurId);
         }
 
         Emprunt emprunt = new Emprunt();
@@ -52,38 +53,48 @@ public class EmprunteurService {
         emprunt.setEmprunteur(emp);
         emprunt = empruntDAO.saveEmprunt(emprunt);
 
-        EmpruntDetail empruntDetail = new EmpruntDetail();
-        empruntDetail.setEmprunt(emprunt);
-        empruntDetail.setDocument(doc);
-        empruntDetail.setStatus("Emprunté");
+        List<EmpruntDTO> empruntDTOs = new ArrayList<>();
 
-        LocalDate now = LocalDate.now();
-        LocalDate dateRetourPrevue;
-        if (doc instanceof Livre) {
-            dateRetourPrevue = now.plusDays(21);
-        } else if (doc instanceof CD) {
-            dateRetourPrevue = now.plusDays(14);
-        } else if (doc instanceof DVD) {
-            dateRetourPrevue = now.plusDays(7);
-        } else {
-            throw new IllegalArgumentException("Type de document non supporté : " + doc.getClass().getName());
+        for (Long documentId : documentIds) {
+            Document doc = documentDAO.get(documentId);
+            if (doc == null) {
+                throw new DocumentNotFoundException("Document introuvable : " + documentId);
+            }
+
+            Long dispo = documentDAO.getexemplairesDisponibles(doc.getDocumentID());
+            if (dispo == null || dispo <= 0) {
+                throw new NoAvailableCopiesException("Aucun exemplaire disponible pour : " + doc.getTitre());
+            }
+
+            EmpruntDetail empruntDetail = new EmpruntDetail();
+            empruntDetail.setEmprunt(emprunt);
+            empruntDetail.setDocument(doc);
+            empruntDetail.setStatus("Emprunté");
+            empruntDetail.setDateRetourPrevue(calculateReturnDate(doc));
+
+            empruntDetail = empruntDAO.saveEmpruntDetail(empruntDetail);
+
+            empruntDTOs.add(EmpruntDTO.fromEntity(
+                    emprunt.getId(),
+                    emprunt.getDateEmprunt().toString(),
+                    empruntDetail.getDateRetourPrevue().toString(),
+                    emp.getId(),
+                    doc.getDocumentID()
+            ));
         }
-        empruntDetail.setDateRetourPrevue(dateRetourPrevue);
 
-        empruntDetail = empruntDAO.saveEmpruntDetail(empruntDetail);
-
-        String dateEmpruntStr = emprunt.getDateEmprunt().toString();
-        String dateRetourStr = (empruntDetail.getDateRetourPrevue() != null) ? empruntDetail.getDateRetourPrevue().toString() : "null";
-
-        return EmpruntDTO.fromEntity(emprunt.getId(), dateEmpruntStr, dateRetourStr, emp.getId(), doc.getDocumentID());
+        return empruntDTOs;
     }
 
-    public List<EmpruntDTO> documentsEmprunter(Long emprunteurId, List<Long> documentIds) {
-        List<EmpruntDTO> emprunts = new ArrayList<>();
-        for (Long documentId : documentIds) {
-            EmpruntDTO empruntDTO = emprunterDocument(emprunteurId, documentId);
-            emprunts.add(empruntDTO);
+    private LocalDate calculateReturnDate(Document doc) throws UnsupportedDocumentTypeException {
+        LocalDate now = LocalDate.now();
+        if (doc instanceof Livre) {
+            return now.plusDays(21);
+        } else if (doc instanceof CD) {
+            return now.plusDays(14);
+        } else if (doc instanceof DVD) {
+            return now.plusDays(7);
         }
-        return emprunts;
+        throw new UnsupportedDocumentTypeException("Type de document non supporté : " + doc.getClass().getName());
     }
 }

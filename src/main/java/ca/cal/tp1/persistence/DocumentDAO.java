@@ -10,7 +10,7 @@ import jakarta.persistence.Persistence;
 
 import java.util.List;
 
-public class DocumentDAO implements IDocumentDAO {
+public class DocumentDAO implements DocumentRepository {
     private static final EntityManagerFactory emf =
             Persistence.createEntityManagerFactory("TP2-PU");
 
@@ -41,7 +41,7 @@ public class DocumentDAO implements IDocumentDAO {
     public List<Livre> searchLivreByTitre(String motCle){
         EntityManager em = emf.createEntityManager();
         try {
-            return em.createQuery("SELECT l FROM Livre l WHERE LOWER(l.titre) LIKE LOWER(CONCAT('%', :motCle, '%'))", Livre.class)
+            return em.createQuery("select l FROM Livre l WHERE LOWER(l.titre) LIKE LOWER(CONCAT('%', :motCle, '%'))", Livre.class)
                     .setParameter("motCle", "%" + motCle + "%")
                     .getResultList();
         } finally {
@@ -52,7 +52,7 @@ public class DocumentDAO implements IDocumentDAO {
     public List<Livre> searchLivreByAuteur(String auteur){
         EntityManager em = emf.createEntityManager();
         try {
-            return em.createQuery("SELECT l FROM Livre l WHERE LOWER(l.auteur) LIKE LOWER(CONCAT('%', :auteur, '%'))", Livre.class)
+            return em.createQuery("select l FROM Livre l WHERE LOWER(l.auteur) LIKE LOWER(CONCAT('%', :auteur, '%'))", Livre.class)
                     .setParameter("auteur", "%" + auteur + "%")
                     .getResultList();
         } finally {
@@ -63,7 +63,7 @@ public class DocumentDAO implements IDocumentDAO {
     public List<Livre> searchLivreByAnnee(Long annee){
         EntityManager em = emf.createEntityManager();
         try {
-            return em.createQuery("SELECT l FROM Livre l WHERE l.annee = :annee", Livre.class)
+            return em.createQuery("select l FROM Livre l WHERE l.annee = :annee", Livre.class)
                     .setParameter("annee", annee)
                     .getResultList();
         } finally {
@@ -74,7 +74,7 @@ public class DocumentDAO implements IDocumentDAO {
     public List<CD> searchCDByTitre(String motCle){
         EntityManager em = emf.createEntityManager();
         try {
-            return em.createQuery("SELECT c FROM CD c WHERE LOWER(c.titre) LIKE LOWER(CONCAT('%', :motCle, '%'))", CD.class)
+            return em.createQuery("select c FROM CD c WHERE LOWER(c.titre) LIKE LOWER(CONCAT('%', :motCle, '%'))", CD.class)
                     .setParameter("motCle", "%" + motCle + "%")
                     .getResultList();
         } finally {
@@ -85,7 +85,7 @@ public class DocumentDAO implements IDocumentDAO {
     public List<CD> searchCDByArtiste(String artiste){
         EntityManager em = emf.createEntityManager();
         try {
-            return em.createQuery("SELECT c FROM CD c WHERE LOWER(c.artiste) LIKE LOWER(CONCAT('%', :artiste, '%'))", CD.class)
+            return em.createQuery("select c FROM CD c WHERE LOWER(c.artiste) LIKE LOWER(CONCAT('%', :artiste, '%'))", CD.class)
                     .setParameter("artiste", "%" + artiste + "%")
                     .getResultList();
         } finally {
@@ -96,7 +96,7 @@ public class DocumentDAO implements IDocumentDAO {
     public List<DVD> searchDVDByTitre(String motCle){
         EntityManager em = emf.createEntityManager();
         try {
-            return em.createQuery("SELECT d FROM DVD d WHERE LOWER(d.titre) LIKE LOWER(CONCAT('%', :motCle, '%'))", DVD.class)
+            return em.createQuery("select d FROM DVD d WHERE LOWER(d.titre) LIKE LOWER(CONCAT('%', :motCle, '%'))", DVD.class)
                     .setParameter("motCle", "%" + motCle + "%")
                     .getResultList();
         } finally {
@@ -107,7 +107,7 @@ public class DocumentDAO implements IDocumentDAO {
     public List<DVD> searchDVDByArtiste(String artiste){
         EntityManager em = emf.createEntityManager();
         try {
-            return em.createQuery("SELECT d FROM DVD d WHERE LOWER(d.artiste) LIKE LOWER(CONCAT('%', :artiste, '%'))", DVD.class)
+            return em.createQuery("select d FROM DVD d WHERE LOWER(d.artiste) LIKE LOWER(CONCAT('%', :artiste, '%'))", DVD.class)
                     .setParameter("artiste", "%" + artiste + "%")
                     .getResultList();
         } finally {
@@ -126,7 +126,7 @@ public class DocumentDAO implements IDocumentDAO {
             Long totalExemplaires = doc.getNombreExemplaires();
 
             Long nbEmpruntes = em.createQuery(
-                            "SELECT COUNT(ed) FROM EmpruntDetail ed " +
+                            "select COUNT(ed) FROM EmpruntDetail ed " +
                                     "WHERE ed.document.documentID = :docId " +
                                     "AND ed.dateRetourActuelle IS NULL",
                             Long.class
