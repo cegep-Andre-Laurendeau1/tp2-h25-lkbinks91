@@ -49,7 +49,6 @@ public class EmprunteurService {
 
         Emprunt emprunt = new Emprunt();
         emprunt.setDateEmprunt(LocalDate.now());
-        emprunt.setStatus("En cours");
         emprunt.setEmprunteur(emp);
         emprunt = empruntDAO.saveEmprunt(emprunt);
 
@@ -69,17 +68,19 @@ public class EmprunteurService {
             EmpruntDetail empruntDetail = new EmpruntDetail();
             empruntDetail.setEmprunt(emprunt);
             empruntDetail.setDocument(doc);
-            empruntDetail.setStatus("Emprunté");
             empruntDetail.setDateRetourPrevue(calculateReturnDate(doc));
 
             empruntDetail = empruntDAO.saveEmpruntDetail(empruntDetail);
+
+            String status = empruntDAO.getEmpruntStatus(emprunt.getId());
 
             empruntDTOs.add(EmpruntDTO.fromEntity(
                     emprunt.getId(),
                     emprunt.getDateEmprunt().toString(),
                     empruntDetail.getDateRetourPrevue().toString(),
                     emp.getId(),
-                    doc.getDocumentID()
+                    doc.getDocumentID(),
+                    status
             ));
         }
 

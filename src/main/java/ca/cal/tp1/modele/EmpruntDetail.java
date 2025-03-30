@@ -16,7 +16,6 @@ public class EmpruntDetail {
     private Long id;
     private LocalDate dateRetourPrevue;
     private LocalDate dateRetourActuelle;
-    private String status;
 
     @ManyToOne
     private Emprunt emprunt;

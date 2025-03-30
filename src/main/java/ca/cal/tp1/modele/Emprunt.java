@@ -18,7 +18,6 @@ public class Emprunt {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDate dateEmprunt;
-    private String status;
     @ManyToOne
     private Emprunteur emprunteur;
 

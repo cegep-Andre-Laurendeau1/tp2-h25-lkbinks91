@@ -10,4 +10,5 @@ public interface EmpruntRepository {
     EmpruntDetail saveEmpruntDetail(EmpruntDetail detail);
 
 
+    String getEmpruntStatus(Long empruntId);
 }

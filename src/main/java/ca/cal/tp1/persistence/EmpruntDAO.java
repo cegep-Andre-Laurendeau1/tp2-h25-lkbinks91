@@ -13,8 +13,7 @@ public class EmpruntDAO implements EmpruntRepository {
 
     @Override
     public Emprunt saveEmprunt(Emprunt emprunt) {
-        EntityManager em = emf.createEntityManager();
-        try {
+        try(EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
             if (emprunt.getId() == null) {
                 em.persist(emprunt);
@@ -23,15 +22,12 @@ public class EmpruntDAO implements EmpruntRepository {
             }
             em.getTransaction().commit();
             return emprunt;
-        } finally {
-            em.close();
         }
     }
 
     @Override
     public EmpruntDetail saveEmpruntDetail(EmpruntDetail detail) {
-        EntityManager em = emf.createEntityManager();
-        try {
+        try(EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
             if (detail.getId() == null) {
                 em.persist(detail);
@@ -40,9 +36,21 @@ public class EmpruntDAO implements EmpruntRepository {
             }
             em.getTransaction().commit();
             return detail;
-        } finally {
-            em.close();
         }
     }
 
+    @Override
+    public String getEmpruntStatus(Long empruntId) {
+        try (EntityManager em = emf.createEntityManager()) {
+            String jpql = "SELECT COUNT(ed) FROM EmpruntDetail ed " +
+                    "WHERE ed.emprunt.id = :empruntId " +
+                    "AND ed.dateRetourActuelle IS NULL";
+
+            Long nonRetournes = em.createQuery(jpql, Long.class)
+                    .setParameter("empruntId", empruntId)
+                    .getSingleResult();
+
+            return nonRetournes > 0 ? "EN_COURS" : "RETOURNE";
+        }
+    }
 }

@@ -12,23 +12,17 @@ public class EmprunteurDAO implements EmprunteurRepository {
 
     @Override
     public void save(Emprunteur emprunteur) {
-        EntityManager em = emf.createEntityManager();
-        try {
+        try(EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
             em.persist(emprunteur);
             em.getTransaction().commit();
-        } finally {
-            em.close();
         }
     }
 
     @Override
     public Emprunteur get(Long id) {
-        EntityManager em = emf.createEntityManager();
-        try {
+        try(EntityManager em = emf.createEntityManager()) {
             return em.find(Emprunteur.class, id);
-        } finally {
-            em.close();
         }
     }
 }
