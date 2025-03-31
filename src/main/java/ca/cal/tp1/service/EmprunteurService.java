@@ -88,14 +88,9 @@ public class EmprunteurService {
     }
 
     private LocalDate calculateReturnDate(Document doc) throws UnsupportedDocumentTypeException {
-        LocalDate now = LocalDate.now();
-        if (doc instanceof Livre) {
-            return now.plusDays(21);
-        } else if (doc instanceof CD) {
-            return now.plusDays(14);
-        } else if (doc instanceof DVD) {
-            return now.plusDays(7);
+        if (doc == null || !(doc instanceof Document)) {
+            throw new UnsupportedDocumentTypeException("Type de document non supporté : null");
         }
-        throw new UnsupportedDocumentTypeException("Type de document non supporté : " + doc.getClass().getName());
+        return LocalDate.now().plusDays(doc.calculerDureeEmprunt());
     }
 }

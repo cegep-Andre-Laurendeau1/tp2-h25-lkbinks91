@@ -9,10 +9,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Document {
+public abstract class Document {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long documentID;
     private String titre;
     private Long nombreExemplaires;
+
+    public abstract Long calculerDureeEmprunt();
 }

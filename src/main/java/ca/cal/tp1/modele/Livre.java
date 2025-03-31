@@ -11,10 +11,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @DiscriminatorValue("Livre")
 public class Livre extends Document {
+    private static final Long DUREE_EMPRUNT_JOURS = 21L;
     private String ISBN;
     private String auteur;
     private String editeur;
     private Long nombrePages;
     private Long annee;
     private Long nombreExemplaires;
+
+    @Override
+    public Long calculerDureeEmprunt() {
+        return DUREE_EMPRUNT_JOURS;
+    }
 }

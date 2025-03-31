@@ -12,7 +12,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @DiscriminatorValue("CD")
 public class CD extends Document {
+    private static final Long DUREE_EMPRUNT_JOURS = 14L;
     private String artiste;
     private Long duree;
     private String genre;
+
+    @Override
+    public Long calculerDureeEmprunt() {
+        return DUREE_EMPRUNT_JOURS;
+    }
 }
